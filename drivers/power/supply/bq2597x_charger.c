@@ -1811,110 +1811,11 @@ static int bq2597x_charger_get_property(struct power_supply *psy,
 	u8 reg_val;
 
 	switch (psp) {
-	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
-		bq2597x_check_charge_enabled(bq, &bq->charge_enabled);
-		val->intval = bq->charge_enabled;
-		break;
 	case POWER_SUPPLY_PROP_STATUS:
 		val->intval = 0;
 		break;
 	case POWER_SUPPLY_PROP_PRESENT:
 		val->intval = bq->usb_present;
-		break;
-	case POWER_SUPPLY_PROP_TI_BATTERY_PRESENT:
-		ret = bq2597x_read_byte(bq, BQ2597X_REG_0D, &reg_val);
-		if (!ret)
-			bq->batt_present  = !!(reg_val & VBAT_INSERT);
-		val->intval = bq->batt_present;
-		break;
-	case POWER_SUPPLY_PROP_TI_VBUS_PRESENT:
-		ret = bq2597x_read_byte(bq, BQ2597X_REG_0D, &reg_val);
-		if (!ret)
-			bq->vbus_present  = !!(reg_val & VBUS_INSERT);
-		val->intval = bq->vbus_present;
-		break;
-	case POWER_SUPPLY_PROP_TI_BATTERY_VOLTAGE:
-		ret = bq2597x_get_adc_data(bq, ADC_VBAT, &result);
-		if (!ret)
-			bq->vbat_volt = result;
-
-		val->intval = bq->vbat_volt;
-		break;
-	case POWER_SUPPLY_PROP_TI_BATTERY_CURRENT:
-		ret = bq2597x_get_adc_data(bq, ADC_IBAT, &result);
-		if (!ret)
-			bq->ibat_curr = result;
-
-		val->intval = bq->ibat_curr;
-		break;
-	case POWER_SUPPLY_PROP_TI_BATTERY_TEMPERATURE:
-		ret = bq2597x_get_adc_data(bq, ADC_TBAT, &result);
-		if (!ret)
-			bq->bat_temp = result;
-
-		val->intval = bq->bat_temp;
-		break;
-	case POWER_SUPPLY_PROP_TI_BUS_VOLTAGE:
-		ret = bq2597x_get_adc_data(bq, ADC_VBUS, &result);
-		if (!ret)
-			bq->vbus_volt = result;
-
-		val->intval = bq->vbus_volt;
-		break;
-	case POWER_SUPPLY_PROP_TI_BUS_CURRENT:
-		ret = bq2597x_get_adc_data(bq, ADC_IBUS, &result);
-		if (!ret)
-			bq->ibus_curr = result;
-
-		val->intval = bq->ibus_curr;
-		break;
-	case POWER_SUPPLY_PROP_TI_BUS_TEMPERATURE:
-		ret = bq2597x_get_adc_data(bq, ADC_TBUS, &result);
-		if (!ret)
-			bq->bus_temp = result;
-
-		val->intval = bq->bus_temp;
-		break;
-	case POWER_SUPPLY_PROP_TI_DIE_TEMPERATURE:
-		ret = bq2597x_get_adc_data(bq, ADC_TDIE, &result);
-		if (!ret)
-			bq->die_temp = result;
-
-		val->intval = bq->die_temp;
-		break;
-	case POWER_SUPPLY_PROP_TI_ALARM_STATUS:
-
-		bq2597x_check_alarm_status(bq);
-
-		val->intval = ((bq->bat_ovp_alarm << BAT_OVP_ALARM_SHIFT)
-			| (bq->bat_ocp_alarm << BAT_OCP_ALARM_SHIFT)
-			| (bq->bat_ucp_alarm << BAT_UCP_ALARM_SHIFT)
-			| (bq->bus_ovp_alarm << BUS_OVP_ALARM_SHIFT)
-			| (bq->bus_ocp_alarm << BUS_OCP_ALARM_SHIFT)
-			| (bq->bat_therm_alarm << BAT_THERM_ALARM_SHIFT)
-			| (bq->bus_therm_alarm << BUS_THERM_ALARM_SHIFT)
-			| (bq->die_therm_alarm << DIE_THERM_ALARM_SHIFT));
-		break;
-
-	case POWER_SUPPLY_PROP_TI_FAULT_STATUS:
-		bq2597x_check_fault_status(bq);
-
-		val->intval = ((bq->bat_ovp_fault << BAT_OVP_FAULT_SHIFT)
-			| (bq->bat_ocp_fault << BAT_OCP_FAULT_SHIFT)
-			| (bq->bus_ovp_fault << BUS_OVP_FAULT_SHIFT)
-			| (bq->bus_ocp_fault << BUS_OCP_FAULT_SHIFT)
-			| (bq->bat_therm_fault << BAT_THERM_FAULT_SHIFT)
-			| (bq->bus_therm_fault << BUS_THERM_FAULT_SHIFT)
-			| (bq->die_therm_fault << DIE_THERM_FAULT_SHIFT));
-		break;
-
-	case POWER_SUPPLY_PROP_TI_REG_STATUS:
-		bq2597x_check_reg_status(bq);
-		val->intval = (bq->vbat_reg << VBAT_REG_STATUS_SHIFT) |
-				(bq->ibat_reg << IBAT_REG_STATUS_SHIFT);
-		break;
-	case POWER_SUPPLY_PROP_TI_SET_BUS_PROTECTION_FOR_QC3:
-		val->intval = 0;
 		break;
 	case POWER_SUPPLY_PROP_MODEL_NAME:
 		ret = bq2597x_get_work_mode(bq, &bq->mode);
@@ -1929,12 +1830,8 @@ static int bq2597x_charger_get_property(struct power_supply *psy,
 				val->strval = "bq2597x-standalone";
 		}
 		break;
-	case POWER_SUPPLY_PROP_TI_BUS_ERROR_STATUS:
-		val->intval = bq2597x_check_vbus_error_status(bq);
-		break;
 	default:
 		return -EINVAL;
-
 	}
 
 	return 0;
