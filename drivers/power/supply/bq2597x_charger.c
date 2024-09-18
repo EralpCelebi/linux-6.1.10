@@ -2412,7 +2412,7 @@ static int bq2597x_resume(struct device *dev)
 
 	return 0;
 }
-static int bq2597x_charger_remove(struct i2c_client *client)
+static void bq2597x_charger_remove(struct i2c_client *client)
 {
 	struct bq2597x *bq = i2c_get_clientdata(client);
 
@@ -2428,8 +2428,6 @@ static int bq2597x_charger_remove(struct i2c_client *client)
 	debugfs_remove_recursive(bq->debug_root);
 
 	sysfs_remove_group(&bq->dev->kobj, &bq2597x_attr_group);
-
-	return 0;
 }
 
 
