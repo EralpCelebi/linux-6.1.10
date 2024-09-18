@@ -861,6 +861,40 @@
 		};
 	};
 
+	bq2597x {
+		bq2597x_master_int_default: bq2597x_master_int_default {
+			/* active state */
+			mux {
+				/* GPIO 36 is used for bq25970 master ic interrupt usage */
+				pins = "gpio36";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio36";
+				drive-strength = <2>; /* 2 MA */
+				bias-pull-up;
+				input-enable;
+			};
+		};
+
+		bq2597x_master_int_suspend: bq2597x_master_int_suspend {
+			/* sleep state */
+			mux {
+				/* GPIO 36 is used for bq25970 master ic interrupt usage */
+				pins = "gpio36";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio36";
+				drive-strength = <2>; /* 2 MA */
+				bias-pull-up;
+				input-enable;
+			};
+		};
+	};
+
 	ln8000 {
 		ln8000_int_default: ln8000_int_default {
 			/* active state */
