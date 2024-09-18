@@ -1874,14 +1874,8 @@ static int bq2597x_check_vbus_error_status(struct bq2597x *bq)
 static int bq2597x_charger_is_writeable(struct power_supply *psy,
 				       enum power_supply_property prop)
 {
-	int ret;
-	// TODO: This function does nothing now.
-	switch (prop) {
-	default:
-		ret = 0;
-		break;
-	}
-	return ret;
+	// TODO: This function does nothing now. I hope my tablet like
+	return 0;
 }
 
 
