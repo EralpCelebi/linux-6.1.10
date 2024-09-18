@@ -243,10 +243,12 @@ static void usbpd_pm_update_cp_status(struct usbpd_pm *pdpm)
 
 	memset(cp, 0, sizeof(*cp));
 
+#ifdef CONFIG_CHARGER_LN8000
 	ret = power_supply_get_property(pdpm->cp_batt_psy,
 					POWER_SUPPLY_PROP_VOLTAGE_NOW, &val);
 	if (!ret)
 		cp->vbat_volt = val.intval;
+#endif
 
 	ret = power_supply_get_property(pdpm->cp_psy,
 					POWER_SUPPLY_PROP_VOLTAGE_NOW, &val);
@@ -293,6 +295,7 @@ static void usbpd_pm_update_cp_status(struct usbpd_pm *pdpm)
 			cp->bus_ocp_fault = true;
 	}
 
+#ifdef CONFIG_CHARGER_LN8000 
 	ret = power_supply_get_property(pdpm->cp_batt_psy,
 			POWER_SUPPLY_PROP_HEALTH, &val);
 	if (!ret) {
@@ -303,7 +306,7 @@ static void usbpd_pm_update_cp_status(struct usbpd_pm *pdpm)
 		if (val.intval == POWER_SUPPLY_HEALTH_OVERCURRENT)
 			cp->bat_ocp_fault = true;
 	}
-
+#endif
 }
 
 static void usbpd_pm_move_state(struct usbpd_pm *pdpm, enum pm_state state)
@@ -849,6 +852,15 @@ static int usbpd_pm_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 
+#ifdef CONFIG_CHARGER_BQ2597X
+	pdpm->cp_psy = power_supply_get_by_name("bq2597x-standalone");
+	if (!pdpm->cp_psy) {
+		dev_err(&pdev->dev, "Cannot find power supply \"bq2597x-standalone\"\n");
+		return -ENODEV;
+	}
+#endif
+
+#ifdef CONFIG_CHARGER_LN8000
 	pdpm->cp_psy = power_supply_get_by_name("ln8000-charger");
 	if (!pdpm->cp_psy) {
 		dev_err(&pdev->dev, "Cannot find power supply \"ln8000-charger\"\n");
@@ -860,6 +872,7 @@ static int usbpd_pm_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "Cannot find power supply \"ln8000-battery\"\n");
 		return -ENODEV;
 	}
+#endif
 
 	pdpm->tcpm_psy = power_supply_get_by_name(
 			"tcpm-source-psy-c440000.spmi:pmic@2:typec@1500");
