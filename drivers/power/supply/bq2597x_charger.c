@@ -1845,7 +1845,7 @@ static int bq2597x_charger_set_property(struct power_supply *psy,
 	struct bq2597x *bq = power_supply_get_drvdata(psy);
 
 	switch (prop) {
-	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
+	case POWER_SUPPLY_PROP_STATUS:
 		bq2597x_enable_charge(bq, val->intval);
 		bq2597x_check_charge_enabled(bq, &bq->charge_enabled);
 		bq_info("POWER_SUPPLY_PROP_CHARGING_ENABLED: %s\n",
