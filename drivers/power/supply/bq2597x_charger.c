@@ -1844,8 +1844,17 @@ static int bq2597x_charger_set_property(struct power_supply *psy,
 	struct bq2597x *bq = power_supply_get_drvdata(psy);
 
 	switch (prop) {
+	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
+		bq2597x_enable_charge(bq, val->intval);
+		bq2597x_check_charge_enabled(bq, &bq->charge_enabled);
+		bq_info("POWER_SUPPLY_PROP_CHARGING_ENABLED: %s\n",
+				val->intval ? "enable" : "disable");
+		break;
 	case POWER_SUPPLY_PROP_PRESENT:
 		bq2597x_set_present(bq, !!val->intval);
+		break;
+	case POWER_SUPPLY_PROP_TI_SET_BUS_PROTECTION_FOR_QC3:
+		bq2597x_set_bus_protection(bq, val->intval);
 		break;
 	default:
 		return -EINVAL;
@@ -1875,8 +1884,12 @@ static int bq2597x_charger_is_writeable(struct power_supply *psy,
 				       enum power_supply_property prop)
 {
 	int ret;
-	// TODO: This function does nothing now.
+
 	switch (prop) {
+	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
+	case POWER_SUPPLY_PROP_TI_SET_BUS_PROTECTION_FOR_QC3:
+		ret = 1;
+		break;
 	default:
 		ret = 0;
 		break;
