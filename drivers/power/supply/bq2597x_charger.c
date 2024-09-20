@@ -1884,8 +1884,7 @@ static int bq2597x_charger_is_writeable(struct power_supply *psy,
 	int ret;
 
 	switch (prop) {
-	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
-	case POWER_SUPPLY_PROP_TI_SET_BUS_PROTECTION_FOR_QC3:
+	case POWER_SUPPLY_PROP_STATUS:
 		ret = 1;
 		break;
 	default:
@@ -2307,7 +2306,7 @@ static int bq2597x_resume(struct device *dev)
 
 	return 0;
 }
-static int bq2597x_charger_remove(struct i2c_client *client)
+static void bq2597x_charger_remove(struct i2c_client *client)
 {
 	struct bq2597x *bq = i2c_get_clientdata(client);
 
