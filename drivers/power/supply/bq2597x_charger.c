@@ -2322,8 +2322,6 @@ static void bq2597x_charger_remove(struct i2c_client *client)
 	debugfs_remove_recursive(bq->debug_root);
 
 	sysfs_remove_group(&bq->dev->kobj, &bq2597x_attr_group);
-
-	return 0;
 }
 
 
