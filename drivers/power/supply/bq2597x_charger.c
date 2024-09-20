@@ -1319,19 +1319,19 @@ static int bq2597x_set_vbat_reg_th(struct bq2597x *bq, int th_mv)
 }
 
 
-static int bq2597x_check_reg_status(struct bq2597x *bq)
-{
-	int ret;
-	u8 val;
+// static int bq2597x_check_reg_status(struct bq2597x *bq)
+// {
+// 	int ret;
+// 	u8 val;
 
-	ret = bq2597x_read_byte(bq, BQ2597X_REG_2C, &val);
-	if (!ret) {
-		bq->vbat_reg = !!(val & BQ2597X_VBAT_REG_ACTIVE_STAT_MASK);
-		bq->ibat_reg = !!(val & BQ2597X_IBAT_REG_ACTIVE_STAT_MASK);
-	}
+// 	ret = bq2597x_read_byte(bq, BQ2597X_REG_2C, &val);
+// 	if (!ret) {
+// 		bq->vbat_reg = !!(val & BQ2597X_VBAT_REG_ACTIVE_STAT_MASK);
+// 		bq->ibat_reg = !!(val & BQ2597X_IBAT_REG_ACTIVE_STAT_MASK);
+// 	}
 
-	return ret;
-}
+// 	return ret;
+// }
 
 static int bq2597x_get_work_mode(struct bq2597x *bq, int *mode)
 {
@@ -1799,16 +1799,13 @@ static enum power_supply_property bq2597x_charger_props[] = {
 
 static void bq2597x_check_alarm_status(struct bq2597x *bq);
 static void bq2597x_check_fault_status(struct bq2597x *bq);
-static int bq2597x_check_vbus_error_status(struct bq2597x *bq);
 
 static int bq2597x_charger_get_property(struct power_supply *psy,
 				enum power_supply_property psp,
 				union power_supply_propval *val)
 {
 	struct bq2597x *bq = power_supply_get_drvdata(psy);
-	int result;
 	int ret;
-	u8 reg_val;
 
 	switch (psp) {
 	case POWER_SUPPLY_PROP_STATUS:
@@ -1861,22 +1858,22 @@ static int bq2597x_charger_set_property(struct power_supply *psy,
 	return 0;
 }
 
-static int bq2597x_check_vbus_error_status(struct bq2597x *bq)
-{
-	int ret;
-	u8 stat = 0;
+// static int bq2597x_check_vbus_error_status(struct bq2597x *bq)
+// {
+// 	int ret;
+// 	u8 stat = 0;
 
-	ret = bq2597x_read_byte(bq, BQ2597X_REG_0A, &stat);
-	if (!ret) {
-		bq_info("BQ2597X_REG_0A:0x%02x\n", stat);
-		if (stat & VBUS_ERROR_LOW_MASK)
-			return VBUS_ERROR_LOW;
-		else if (stat & VBUS_ERROR_HIGH_MASK)
-			return VBUS_ERROR_HIGH;
-	}
+// 	ret = bq2597x_read_byte(bq, BQ2597X_REG_0A, &stat);
+// 	if (!ret) {
+// 		bq_info("BQ2597X_REG_0A:0x%02x\n", stat);
+// 		if (stat & VBUS_ERROR_LOW_MASK)
+// 			return VBUS_ERROR_LOW;
+// 		else if (stat & VBUS_ERROR_HIGH_MASK)
+// 			return VBUS_ERROR_HIGH;
+// 	}
 
-	return VBUS_ERROR_NONE;
-}
+// 	return VBUS_ERROR_NONE;
+// }
 
 static int bq2597x_charger_is_writeable(struct power_supply *psy,
 				       enum power_supply_property prop)
